@@ -8,6 +8,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useStorageUrl } from "@/lib/utils";
 import { CalendarDays, Check, CircleArrowRight, LoaderCircle, MapPin, PencilIcon, QrCode, StarIcon, Ticket, XCircle } from "lucide-react";
+import { SignInButton } from "@clerk/nextjs";
 import PurchaseTicket from "./PurchaseTicket";
 
 export default function EventCard({ eventId, hideBuyButton = false }: { eventId: Id<"events">, hideBuyButton?: boolean }) {
@@ -83,7 +84,17 @@ export default function EventCard({ eventId, hideBuyButton = false }: { eventId:
   };
 
   const renderTicketStatus = () => {
-    if (!user) return null;
+    if (!user) {
+      return (
+        <div className="mt-4">
+          <SignInButton mode="modal">
+            <button className="w-full bg-blue-600 text-white px-4 py-3 rounded-lg text-base font-medium hover:bg-blue-700 transition-colors duration-200 shadow-sm">
+              Sign In to Buy Tickets
+            </button>
+          </SignInButton>
+        </div>
+      );
+    }
 
     if (isEventOwner) {
       return (
@@ -126,7 +137,7 @@ export default function EventCard({ eventId, hideBuyButton = false }: { eventId:
                   {userTickets && userTickets.length > 0 && (
                     <div className="mt-1 text-xs text-green-600">
                       {(() => {
-                        const passCounts = {};
+                        const passCounts: Record<string, number> = {};
                         userTickets.forEach(ticket => {
                           const passInfo = passes?.find(p => p._id === ticket.passId);
                           const passName = passInfo?.name || 'General';
@@ -209,7 +220,7 @@ export default function EventCard({ eventId, hideBuyButton = false }: { eventId:
       }`}
     >
       {/* Event Image */}
-      <div className="relative w-full h-80 overflow-hidden">
+      <div className="relative w-full h-48 sm:h-64 md:h-80 overflow-hidden">
         <Image
           src={imageUrl || `/event-images/image.png`}
           alt={event.name}
@@ -228,7 +239,7 @@ export default function EventCard({ eventId, hideBuyButton = false }: { eventId:
         )}
       </div>
 
-      <div className="p-6 relative">
+      <div className="p-4 sm:p-6 relative">
         <div className="flex justify-between items-start">
           <div>
             <div className="flex flex-col items-start gap-2">
@@ -238,7 +249,7 @@ export default function EventCard({ eventId, hideBuyButton = false }: { eventId:
                   Your Event
                 </span>
               )}
-              <h2 className="text-2xl font-bold text-gray-900">{event.name}</h2>
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">{event.name}</h2>
             </div>
             {isPastEvent && (
               <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold bg-red-100 text-red-800 mt-2">
@@ -250,7 +261,7 @@ export default function EventCard({ eventId, hideBuyButton = false }: { eventId:
           {/* Price Tag */}
           <div className="flex flex-col items-end gap-2 ml-4">
             <span
-              className={`px-4 py-1.5 font-semibold rounded-full ${
+              className={`px-2 sm:px-4 py-1 sm:py-1.5 text-sm sm:text-base font-semibold rounded-full ${
                 isPastEvent
                   ? "bg-gray-50 text-gray-500"
                   : "bg-green-50 text-green-700"
@@ -295,7 +306,7 @@ export default function EventCard({ eventId, hideBuyButton = false }: { eventId:
           </div>
         </div>
 
-        <p className="mt-4 text-gray-600 text-sm">
+        <p className="mt-4 text-gray-600 text-xs sm:text-sm line-clamp-2 sm:line-clamp-none">
           {event.description}
         </p>
 

@@ -39,36 +39,44 @@ export default function Ticket({ ticketId }: { ticketId: Id<"tickets"> }) {
     return () => clearInterval(interval);
   }, []);
 
-  const getUserTheme = (userId: string) => {
-    const colors = [
-      { bg: "bg-gradient-to-br from-blue-500 to-purple-600", accent: "text-blue-600", light: "bg-blue-50" },
-      { bg: "bg-gradient-to-br from-green-500 to-teal-600", accent: "text-green-600", light: "bg-green-50" },
-      { bg: "bg-gradient-to-br from-purple-500 to-pink-600", accent: "text-purple-600", light: "bg-purple-50" },
-      { bg: "bg-gradient-to-br from-orange-500 to-red-600", accent: "text-orange-600", light: "bg-orange-50" },
-      { bg: "bg-gradient-to-br from-indigo-500 to-blue-600", accent: "text-indigo-600", light: "bg-indigo-50" },
-      { bg: "bg-gradient-to-br from-pink-500 to-rose-600", accent: "text-pink-600", light: "bg-pink-50" },
-      { bg: "bg-gradient-to-br from-teal-500 to-cyan-600", accent: "text-teal-600", light: "bg-teal-50" },
-      { bg: "bg-gradient-to-br from-amber-500 to-orange-600", accent: "text-amber-600", light: "bg-amber-50" }
+  const getUserTheme = (ticketId: string) => {
+    const themes = [
+      { bg: "bg-gradient-to-br from-blue-500 to-purple-600", accent: "text-blue-600", light: "bg-blue-50", border: "border-blue-200" },
+      { bg: "bg-gradient-to-br from-green-500 to-teal-600", accent: "text-green-600", light: "bg-green-50", border: "border-green-200" },
+      { bg: "bg-gradient-to-br from-purple-500 to-pink-600", accent: "text-purple-600", light: "bg-purple-50", border: "border-purple-200" },
+      { bg: "bg-gradient-to-br from-orange-500 to-red-600", accent: "text-orange-600", light: "bg-orange-50", border: "border-orange-200" },
+      { bg: "bg-gradient-to-br from-indigo-500 to-blue-600", accent: "text-indigo-600", light: "bg-indigo-50", border: "border-indigo-200" },
+      { bg: "bg-gradient-to-br from-pink-500 to-rose-600", accent: "text-pink-600", light: "bg-pink-50", border: "border-pink-200" },
+      { bg: "bg-gradient-to-br from-teal-500 to-cyan-600", accent: "text-teal-600", light: "bg-teal-50", border: "border-teal-200" },
+      { bg: "bg-gradient-to-br from-amber-500 to-orange-600", accent: "text-amber-600", light: "bg-amber-50", border: "border-amber-200" },
+      { bg: "bg-gradient-to-br from-red-500 to-pink-600", accent: "text-red-600", light: "bg-red-50", border: "border-red-200" },
+      { bg: "bg-gradient-to-br from-cyan-500 to-blue-600", accent: "text-cyan-600", light: "bg-cyan-50", border: "border-cyan-200" },
+      { bg: "bg-gradient-to-br from-violet-500 to-purple-600", accent: "text-violet-600", light: "bg-violet-50", border: "border-violet-200" },
+      { bg: "bg-gradient-to-br from-emerald-500 to-green-600", accent: "text-emerald-600", light: "bg-emerald-50", border: "border-emerald-200" },
+      { bg: "bg-gradient-to-br from-rose-500 to-red-600", accent: "text-rose-600", light: "bg-rose-50", border: "border-rose-200" },
+      { bg: "bg-gradient-to-br from-sky-500 to-cyan-600", accent: "text-sky-600", light: "bg-sky-50", border: "border-sky-200" },
+      { bg: "bg-gradient-to-br from-lime-500 to-green-600", accent: "text-lime-600", light: "bg-lime-50", border: "border-lime-200" },
+      { bg: "bg-gradient-to-br from-fuchsia-500 to-pink-600", accent: "text-fuchsia-600", light: "bg-fuchsia-50", border: "border-fuchsia-200" }
     ];
-    const hash = userId.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a; }, 0);
-    return colors[Math.abs(hash) % colors.length];
+    const hash = ticketId.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a; }, 0);
+    return themes[Math.abs(hash) % themes.length];
   };
 
   if (!ticket || !event || !user || !ticketStatus) {
     return <Spinner />;
   }
 
-  const theme = getUserTheme(user.userId);
+  const theme = getUserTheme(ticket._id);
   const { scannedCount, totalCount, isScanned, scannedAt } = ticketStatus;
 
   return (
     <div
-      className={`bg-white rounded-xl overflow-hidden shadow-xl border ${event.is_cancelled ? "border-red-200" : "border-gray-100"}`}
+      className={`bg-white rounded-xl overflow-hidden shadow-xl border ${event.is_cancelled ? "border-red-200" : theme.border}`}
     >
       {/* Event Header with Image */}
       <div className="relative">
         {imageUrl && (
-          <div className="relative w-full aspect-[21/9] ">
+          <div className="relative w-full aspect-[21/9]">
             <Image
               src={imageUrl}
               alt={event.name}
@@ -76,14 +84,14 @@ export default function Ticket({ ticketId }: { ticketId: Id<"tickets"> }) {
               className={`object-cover object-center ${event.is_cancelled ? "opacity-50" : ""}`}
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/90" />
+            <div className={`absolute inset-0 ${theme.bg} opacity-80`} />
           </div>
         )}
         <div
-          className={`px-6 py-4 ${imageUrl ? "absolute bottom-0 left-0 right-0" : event.is_cancelled ? "bg-red-600" : theme.bg} `}
+          className={`px-4 sm:px-6 py-3 sm:py-4 ${imageUrl ? "absolute bottom-0 left-0 right-0" : event.is_cancelled ? "bg-red-600" : theme.bg} ${imageUrl ? theme.bg + ' opacity-90' : ''}`}
         >
           <h2
-            className={`text-2xl font-bold ${imageUrl || !imageUrl ? "text-white" : "text-black"}`}
+            className={`text-xl sm:text-2xl font-bold ${imageUrl || !imageUrl ? "text-white" : "text-black"}`}
           >
             {event.name}
           </h2>
@@ -94,13 +102,13 @@ export default function Ticket({ ticketId }: { ticketId: Id<"tickets"> }) {
       </div>
 
       {/* Ticket Content */}
-      <div className="p-6">
-        <div className="grid grid-cols-2 gap-6">
+      <div className="p-4 sm:p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
           {/* Left Column - Event Details */}
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div className="flex items-center text-gray-600">
               <CalendarDays
-                className={`w-5 h-5 mr-3 ${event.is_cancelled ? "text-red-600" : theme.accent}`}
+                className={`w-4 sm:w-5 h-4 sm:h-5 mr-3 ${event.is_cancelled ? "text-red-600" : theme.accent}`}
               />
               <div>
                 <p className="text-sm text-gray-500">Date</p>
@@ -112,7 +120,7 @@ export default function Ticket({ ticketId }: { ticketId: Id<"tickets"> }) {
 
             <div className="flex items-center text-gray-600">
               <MapPin
-                className={`w-5 h-5 mr-3 ${event.is_cancelled ? "text-red-600" : theme.accent}`}
+                className={`w-4 sm:w-5 h-4 sm:h-5 mr-3 ${event.is_cancelled ? "text-red-600" : theme.accent}`}
               />
               <div>
                 <p className="text-sm text-gray-500">Location</p>
@@ -122,7 +130,7 @@ export default function Ticket({ ticketId }: { ticketId: Id<"tickets"> }) {
 
             <div className="flex items-center text-gray-600">
               <User
-                className={`w-5 h-5 mr-3 ${event.is_cancelled ? "text-red-600" : theme.accent}`}
+                className={`w-4 sm:w-5 h-4 sm:h-5 mr-3 ${event.is_cancelled ? "text-red-600" : theme.accent}`}
               />
               <div>
                 <p className="text-sm text-gray-500">Ticket Holder</p>
@@ -133,7 +141,7 @@ export default function Ticket({ ticketId }: { ticketId: Id<"tickets"> }) {
 
             <div className="flex items-center text-gray-600 break-all">
               <IdCard
-                className={`w-5 h-5 mr-3 ${event.is_cancelled ? "text-red-600" : theme.accent}`}
+                className={`w-4 sm:w-5 h-4 sm:h-5 mr-3 ${event.is_cancelled ? "text-red-600" : theme.accent}`}
               />
               <div>
                 <p className="text-sm text-gray-500">Ticket Holder ID</p>
@@ -143,7 +151,7 @@ export default function Ticket({ ticketId }: { ticketId: Id<"tickets"> }) {
 
             <div className="flex items-center text-gray-600">
               <TicketIcon
-                className={`w-5 h-5 mr-3 ${event.is_cancelled ? "text-red-600" : theme.accent}`}
+                className={`w-4 sm:w-5 h-4 sm:h-5 mr-3 ${event.is_cancelled ? "text-red-600" : theme.accent}`}
               />
               <div>
                 <p className="text-sm text-gray-500">{selectedPass ? 'Pass Type' : 'Ticket Price'}</p>
@@ -155,13 +163,13 @@ export default function Ticket({ ticketId }: { ticketId: Id<"tickets"> }) {
           </div>
 
           {/* Right Column - QR Code */}
-          <div className="flex flex-col items-center justify-center border-l border-gray-200 pl-6">
+          <div className="flex flex-col items-center justify-center lg:border-l border-t lg:border-t-0 border-gray-200 pt-6 lg:pt-0 lg:pl-6">
             <div
               className={`bg-gray-100 p-4 rounded-lg ${event.is_cancelled ? "opacity-50" : ""}`}
             >
-              <QRCode value={ticket._id} className="w-32 h-32" />
+              <QRCode value={ticket._id} className="w-24 h-24 sm:w-32 sm:h-32" />
             </div>
-            <p className="mt-2 text-sm text-gray-500 break-all text-center max-w-[200px] md:max-w-full">
+            <p className="mt-2 text-xs sm:text-sm text-gray-500 break-all text-center max-w-[200px] md:max-w-full">
               Ticket ID: {ticket._id}
             </p>
           </div>
@@ -169,13 +177,13 @@ export default function Ticket({ ticketId }: { ticketId: Id<"tickets"> }) {
 
         {/* Pass Benefits */}
         {selectedPass && selectedPass.benefits && selectedPass.benefits.length > 0 && (
-          <div className="mt-6 pt-6 border-t border-gray-200">
+          <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200">
             <h3 className="text-sm font-medium text-gray-900 mb-3">
               Pass Benefits
             </h3>
             <ul className="space-y-2">
               {selectedPass.benefits.map((benefit, index) => (
-                <li key={index} className="flex items-start gap-2 text-sm text-gray-600">
+                <li key={index} className="flex items-start gap-2 text-xs sm:text-sm text-gray-600">
                   <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
                   <span>{benefit}</span>
                 </li>
@@ -185,7 +193,7 @@ export default function Ticket({ ticketId }: { ticketId: Id<"tickets"> }) {
         )}
 
         {/* Additional Information */}
-        <div className="mt-6 pt-6 border-t border-gray-200">
+        <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200">
           <h3 className="text-sm font-medium text-gray-900 mb-2">
             Important Information
           </h3>
@@ -195,7 +203,7 @@ export default function Ticket({ ticketId }: { ticketId: Id<"tickets"> }) {
               hasn&apos;t been already.
             </p>
           ) : (
-            <ul className="text-sm text-gray-600 space-y-1">
+            <ul className="text-xs sm:text-sm text-gray-600 space-y-1">
               <li>• Please arrive at least 30 minutes before the event</li>
               <li>• Have your ticket QR code ready for scanning</li>
               <li>• This ticket is non-transferable</li>
@@ -206,12 +214,12 @@ export default function Ticket({ ticketId }: { ticketId: Id<"tickets"> }) {
 
       {/* Ticket Footer */}
       <div
-        className={`${event.is_cancelled ? "bg-red-50" : theme.light} px-6 py-4 flex justify-between items-center`}
+        className={`${event.is_cancelled ? "bg-red-50" : theme.light} px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 ${theme.border} border-t`}
       >
-        <span className="text-sm text-gray-500">
+        <span className="text-xs sm:text-sm text-gray-500">
           Purchase Date: {new Date(ticket.purchasedAt).toLocaleString()}
         </span>
-        <div className="text-right">
+        <div className="text-left sm:text-right">
           <span
             className={`text-sm font-medium ${event.is_cancelled ? "text-red-600" : isScanned ? "text-green-600" : theme.accent}`}
           >

@@ -43,9 +43,9 @@ export default function MyTicketsPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-4 sm:p-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">My Tickets</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">My Tickets</h1>
         <p className="text-gray-600 mt-2">View and manage your purchased tickets</p>
       </div>
 
@@ -59,74 +59,104 @@ export default function MyTicketsPage() {
           </Link>
         </div>
       ) : (
-        <div className="grid gap-6">
-          {tickets.map((ticket) => (
-            <div key={ticket._id} className="bg-white rounded-lg shadow-md border p-6">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <h3 className="text-xl font-semibold text-gray-900">{ticket.eventName}</h3>
-                    {(() => {
-                      const passInfo = passes?.find(p => p._id === ticket.passId);
-                      return passInfo && (
-                        <span className="inline-flex items-center gap-1 bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
-                          <Tag className="w-3 h-3" />
-                          {passInfo.name}
-                        </span>
-                      );
-                    })()
-                    }
-                  </div>
-                  <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4" />
-                      {new Date(ticket.eventDate).toLocaleDateString()}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      {new Date(ticket.eventDate).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <MapPin className="w-4 h-4" />
-                      {ticket.eventLocation}
-                    </div>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-lg font-bold text-gray-900">₹{ticket.price}</div>
-                  <div className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                    ticket.status === 'valid' ? 'bg-green-100 text-green-800' : 
-                    ticket.status === 'used' ? 'bg-gray-100 text-gray-800' : 
-                    'bg-red-100 text-red-800'
-                  }`}>
-                    {ticket.status}
-                  </div>
-                </div>
-              </div>
+        <div className="grid gap-4 sm:gap-6">
+          {(() => {
+            // Group tickets by event and pass type
+            const groupedTickets = tickets.reduce((groups, ticket) => {
+              const key = `${ticket.eventId}-${ticket.passId || 'general'}`;
+              if (!groups[key]) {
+                groups[key] = [];
+              }
+              groups[key].push(ticket);
+              return groups;
+            }, {} as Record<string, typeof tickets>);
+
+            return Object.values(groupedTickets).map((ticketGroup) => {
+              const firstTicket = ticketGroup[0];
+              const passInfo = passes?.find(p => p._id === firstTicket.passId);
+              const totalPrice = ticketGroup.reduce((sum, t) => sum + t.price, 0);
+              const ticketCount = ticketGroup.length;
               
-              <div className="flex justify-between items-center pt-4 border-t">
-                <div className="text-sm text-gray-500">
-                  <div>Ticket ID: {ticket._id}</div>
-                  <div>Purchased: {new Date(ticket.purchasedAt).toLocaleString()}</div>
+              return (
+                <div key={`${firstTicket.eventId}-${firstTicket.passId}`} className="bg-white rounded-lg shadow-md border p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4">
+                    <div>
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                        <h3 className="text-lg sm:text-xl font-semibold text-gray-900">{firstTicket.eventName}</h3>
+                        <div className="flex flex-wrap gap-2">
+                          {passInfo && (
+                            <span className="inline-flex items-center gap-1 bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium w-fit">
+                              <Tag className="w-3 h-3" />
+                              {passInfo.name}
+                            </span>
+                          )}
+                          {ticketCount > 1 && (
+                            <span className="inline-flex items-center gap-1 bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium w-fit">
+                              <Ticket className="w-3 h-3" />
+                              {ticketCount} tickets
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mt-2 text-sm text-gray-600">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          {new Date(firstTicket.eventDate).toLocaleDateString()}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          {new Date(firstTicket.eventDate).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <MapPin className="w-4 h-4" />
+                          {firstTicket.eventLocation}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-left sm:text-right">
+                      <div className="text-base sm:text-lg font-bold text-gray-900">₹{totalPrice.toFixed(2)}</div>
+                      <div className="text-xs text-gray-500">
+                        {ticketCount > 1 ? `₹${(totalPrice/ticketCount).toFixed(2)} each` : ''}
+                      </div>
+                      <div className={`inline-block px-2 py-1 rounded-full text-xs font-medium mt-1 ${
+                        firstTicket.status === 'valid' ? 'bg-green-100 text-green-800' : 
+                        firstTicket.status === 'used' ? 'bg-gray-100 text-gray-800' : 
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {firstTicket.status}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 pt-4 border-t">
+                    <div className="text-sm text-gray-500">
+                      <div>Purchased: {new Date(firstTicket.purchasedAt).toLocaleString()}</div>
+                      {ticketCount > 1 && (
+                        <div className="text-xs text-gray-400 mt-1">
+                          {ticketCount} tickets: {ticketGroup.map(t => t._id.slice(-6)).join(', ')}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-2 sm:flex-row">
+                      <button
+                        onClick={() => window.open(`/tickets/${firstTicket._id}`, '_blank')}
+                        className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 flex items-center justify-center gap-1"
+                      >
+                        <Download className="w-4 h-4" />
+                        Download {ticketCount > 1 ? 'All' : ''}
+                      </button>
+                      <Link 
+                        href={`/tickets/${firstTicket._id}`}
+                        className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 text-center"
+                      >
+                        View Ticket
+                      </Link>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => window.open(`/tickets/${ticket._id}`, '_blank')}
-                    className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 flex items-center gap-1"
-                  >
-                    <Download className="w-4 h-4" />
-                    Download
-                  </button>
-                  <Link 
-                    href={`/tickets/${ticket._id}`}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700"
-                  >
-                    View Ticket
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))}
+              );
+            });
+          })()}
         </div>
       )}
     </div>

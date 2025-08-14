@@ -21,9 +21,16 @@ function Header() {
             />
           </Link>
 
-          <div className="lg:hidden">
+          <div className="lg:hidden flex items-center">
             <SignedIn>
-              <UserButton />
+              <UserButton 
+                appearance={{
+                  elements: {
+                    avatarBox: "w-10 h-10",
+                    userButtonPopoverCard: "right-0"
+                  }
+                }}
+              />
             </SignedIn>
 
             <SignedOut>
@@ -46,11 +53,11 @@ function Header() {
           <SignedIn>
             <div className="flex items-center gap-3">
               <Link href="/seller/new-event">
-              <button className="bg-blue-600 text-white px-3 py-1.5 text-sm rounded-lg
-              hover:bg-blue-700 transition">
-                Sell Tickets
-              </button>
-            </Link>
+                <button className="bg-blue-600 text-white px-3 py-1.5 text-sm rounded-lg
+                hover:bg-blue-700 transition">
+                  Sell Tickets
+                </button>
+              </Link>
 
             <Link href="/tickets">
               <button className="bg-gray-100 text-gray-800 px-3 py-1.5 text-sm rounded-lg
@@ -58,7 +65,13 @@ function Header() {
                 My Tickets
               </button>
             </Link>
-            <UserButton />
+            <UserButton 
+              appearance={{
+                elements: {
+                  avatarBox: "w-8 h-8"
+                }
+              }}
+            />
             </div>
           </SignedIn>
 

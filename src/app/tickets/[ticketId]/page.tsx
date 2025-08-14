@@ -62,10 +62,10 @@ export default function TicketPage({ params }: { params: Promise<{ ticketId: str
           }
         }
       `}</style>
-      <div className="min-h-screen bg-gradient-to-br from-orange-100 to-red-100 py-8 px-4">
-      <div className="w-[450px] h-auto mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col border-4 border-orange-200 print-ticket">
+      <div className="min-h-screen bg-gradient-to-br from-orange-100 to-red-100 py-4 sm:py-8 px-4">
+      <div className="w-full max-w-[450px] h-auto mx-auto bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col border-2 sm:border-4 border-orange-200 print-ticket">
         {/* Header */}
-        <div className="bg-gradient-to-r from-orange-500 to-red-600 p-6 text-white relative overflow-hidden">
+        <div className="bg-gradient-to-r from-orange-500 to-red-600 p-4 sm:p-6 text-white relative overflow-hidden">
           <div className="absolute inset-0 opacity-20">
             <div className="absolute top-2 left-2 w-4 h-4 bg-yellow-300 rounded-full animate-pulse"></div>
             <div className="absolute top-4 right-6 w-3 h-3 bg-yellow-200 rounded-full animate-pulse delay-300"></div>
@@ -73,23 +73,23 @@ export default function TicketPage({ params }: { params: Promise<{ ticketId: str
             <div className="absolute bottom-2 right-4 w-3 h-3 bg-yellow-300 rounded-full animate-pulse delay-500"></div>
           </div>
           <div className="relative z-10 text-center">
-            <div className="text-4xl mb-2">🎭</div>
-            <h1 className="text-xl font-bold mb-1">E-Ticket</h1>
-            <h2 className="text-lg font-semibold">{event.name}</h2>
+            <div className="text-3xl sm:text-4xl mb-2">🎭</div>
+            <h1 className="text-lg sm:text-xl font-bold mb-1">E-Ticket</h1>
+            <h2 className="text-base sm:text-lg font-semibold">{event.name}</h2>
           </div>
         </div>
 
         {/* QR Code */}
-        <div className="p-6 text-center bg-gradient-to-b from-orange-50 to-white">
+        <div className="p-4 sm:p-6 text-center bg-gradient-to-b from-orange-50 to-white">
           <div className="bg-white p-4 rounded-2xl inline-block shadow-lg border-2 border-orange-100 hover:shadow-xl transition-shadow duration-300">
-            <QRCodeSVG value={qrData} size={150} level="H" />
+            <QRCodeSVG value={qrData} size={120} className="sm:w-[150px] sm:h-[150px]" level="H" />
           </div>
           <p className="text-base text-orange-700 mt-3 font-medium">✨ Scan at venue entrance ✨</p>
         </div>
 
         {/* Ticket Details */}
-        <div className="p-6 bg-gradient-to-t from-orange-50 to-white">
-          <div className="grid grid-cols-2 gap-4 text-base mb-4">
+        <div className="p-4 sm:p-6 bg-gradient-to-t from-orange-50 to-white">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-base mb-4">
             <div className="bg-white p-4 rounded-xl shadow-sm border border-orange-100 h-20 flex flex-col justify-between">
               <div className="flex items-center gap-2">
                 <Ticket className="w-5 h-5 text-orange-500" />
@@ -140,7 +140,7 @@ export default function TicketPage({ params }: { params: Promise<{ ticketId: str
           </div>
           
           {/* Download/Print Buttons */}
-          <div className="flex gap-2 mt-4 no-print">
+          <div className="flex flex-col sm:flex-row gap-2 mt-4 no-print">
             <button
               onClick={() => window.print()}
               className="flex-1 bg-orange-500 text-white px-4 py-3 rounded-xl font-medium hover:bg-orange-600 transition-colors flex items-center justify-center gap-2"

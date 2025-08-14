@@ -21,10 +21,6 @@ export default function NewEventPage() {
       router.push("/");
       return;
     }
-
-    if (isLoaded && user && !AUTHORIZED_CREATORS.includes(user.id)) {
-      router.push("/seller");
-    }
   }, [isLoaded, user, router]);
 
   if (!isLoaded) {
@@ -45,12 +41,24 @@ export default function NewEventPage() {
 
   if (!isAuthorized) {
     return (
-      <div className="max-w-3xl mx-auto p-6">
-        <div className="bg-white rounded-lg shadow-lg text-center p-8">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Debug Info</h2>
-          <p className="text-gray-600 mb-2">Your User ID: {user.id}</p>
-          <p className="text-gray-600 mb-2">Authorized IDs: {JSON.stringify(AUTHORIZED_CREATORS)}</p>
-          <p className="text-gray-600">Is Authorized: {isAuthorized.toString()}</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6 sm:p-8 text-center">
+          <Shield className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Access Restricted</h2>
+          <p className="text-sm sm:text-base text-gray-600 mb-6">Event creation is currently limited to authorized users only.</p>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <Mail className="w-5 h-5 text-blue-600 mx-auto mb-2" />
+            <p className="text-sm text-blue-800">Interested in becoming an event organizer?</p>
+            
+            <p className="text-sm text-blue-600 mt-1">Contact developers for approval</p>
+            <span>anirudhsonawane111@gmail.com</span>
+          </div>
+          <button
+            onClick={() => router.push('/')}
+            className="w-full bg-gray-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-gray-700 transition-colors"
+          >
+            Back to Events
+          </button>
         </div>
       </div>
     );

@@ -38,7 +38,7 @@ export default function PassSelectionPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
         <div className="mb-8">
           <button
             onClick={() => router.back()}
@@ -47,7 +47,7 @@ export default function PassSelectionPage() {
             <ArrowLeft className="w-4 h-4" />
             Back to Event
           </button>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
             Choose Your Pass
           </h1>
           <p className="text-gray-600">
@@ -55,7 +55,7 @@ export default function PassSelectionPage() {
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {passes.map((pass, index) => {
             const isPopular = index === 1;
             const availableQuantity = pass.totalQuantity - pass.soldQuantity;
@@ -78,7 +78,7 @@ export default function PassSelectionPage() {
                   </div>
                 )}
 
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                   <div className="text-center mb-6">
                     <div className="flex items-center justify-center gap-2 mb-2">
                       <Tag className="w-5 h-5 text-blue-600" />
@@ -89,7 +89,7 @@ export default function PassSelectionPage() {
                     <p className="text-gray-600 text-sm mb-4">
                       {pass.description}
                     </p>
-                    <div className="text-3xl font-bold text-gray-900">
+                    <div className="text-2xl sm:text-3xl font-bold text-gray-900">
                       ₹{pass.price.toFixed(2)}
                     </div>
                     <div className="text-sm text-gray-500 mt-1">

@@ -137,7 +137,7 @@ export default function PurchasePage() {
 
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           {/* Selected Pass Info */}
-          <div className="p-6 border-b border-gray-200">
+          <div className="p-4 sm:p-6 border-b border-gray-200">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                 <Tag className="w-6 h-6 text-blue-600" />
@@ -180,7 +180,7 @@ export default function PurchasePage() {
           </div>
 
           {/* Quantity Selector */}
-          <div className="p-6 border-b border-gray-200">
+          <div className="p-4 sm:p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div>
                 <h4 className="font-semibold text-gray-900 mb-1">Quantity</h4>
@@ -211,7 +211,7 @@ export default function PurchasePage() {
           </div>
 
           {/* Total & Purchase */}
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             <div className="flex justify-between items-center mb-6">
               <span className="text-lg font-semibold text-gray-900">
                 Total Amount:

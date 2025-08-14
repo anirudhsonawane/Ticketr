@@ -34,7 +34,7 @@ export default function EventPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           {imageUrl && (
             <div className="aspect-[21/9] relative w-full">
@@ -48,18 +48,18 @@ export default function EventPage() {
             </div>
           )}
 
-          <div className="p-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="p-4 sm:p-6 lg:p-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12">
               {/* Left Column - Event Details */}
               <div className="space-y-8">
                 <div>
-                  <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
                     {event.name}
                   </h1>
                   <p className="text-lg text-gray-600">{event.description}</p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
                     <div className="flex items-center text-gray-600 mb-1">
                       <CalendarDays className="w-5 h-5 mr-2 text-blue-600" />

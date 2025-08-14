@@ -26,11 +26,11 @@ export default function EventList() {
     .sort((a, b) => b.eventDate - a.eventDate);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Upcoming Events</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Upcoming Events</h1>
           <p className="mt-2 text-gray-600">
             Discover & book tickets for amazing events
           </p>
@@ -47,7 +47,7 @@ export default function EventList() {
 
       {/* Upcoming Events Grid */}
       {upcomingEvents.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
           {upcomingEvents.map((event) => (
             <EventCard key={event._id} eventId={event._id} />
           ))}
@@ -65,8 +65,8 @@ export default function EventList() {
       {/* Past Events Section */}
       {pastEvents.length > 0 && (
         <>
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Past Events</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Past Events</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {pastEvents.map((event) => (
               <EventCard key={event._id} eventId={event._id} />
             ))}
