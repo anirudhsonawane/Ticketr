@@ -3,9 +3,9 @@
 import { useSearchParams } from "next/navigation";
 import { CheckCircle } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 
-export default function PurchaseSuccess() {
+function PurchaseSuccessContent() {
   const searchParams = useSearchParams();
   const paymentId = searchParams.get("payment_id");
   const [ticketCreated, setTicketCreated] = useState(false);
@@ -71,5 +71,13 @@ export default function PurchaseSuccess() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PurchaseSuccess() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600"></div></div>}>
+      <PurchaseSuccessContent />
+    </Suspense>
   );
 }
