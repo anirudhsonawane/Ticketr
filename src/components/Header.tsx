@@ -8,7 +8,7 @@ import SearchBar from "./SearchBar";
 
 function Header() {
   return (
-    <div className="border-b">
+    <div className="border-b relative z-40">
       <div className="flex flex-col lg:flex-row items-center gap-4 p-4">
         <div className="flex items-center justify-between w-full lg:w-auto">
           <Link href="/" className="font-bold shrink-0">
@@ -21,13 +21,14 @@ function Header() {
             />
           </Link>
 
-          <div className="lg:hidden flex items-center">
+          <div className="lg:hidden flex items-center relative z-50">
             <SignedIn>
               <UserButton 
                 appearance={{
                   elements: {
-                    avatarBox: "w-10 h-10",
-                    userButtonPopoverCard: "right-0"
+                    avatarBox: "w-10 h-10 border-2 border-gray-200 shadow-sm",
+                    userButtonPopoverCard: "right-0 z-50",
+                    userButtonPopoverRootBox: "z-50"
                   }
                 }}
               />
@@ -68,7 +69,9 @@ function Header() {
             <UserButton 
               appearance={{
                 elements: {
-                  avatarBox: "w-8 h-8"
+                  avatarBox: "w-8 h-8 border-2 border-gray-200 shadow-sm",
+                  userButtonPopoverCard: "z-50",
+                  userButtonPopoverRootBox: "z-50"
                 }
               }}
             />
