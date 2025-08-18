@@ -54,3 +54,26 @@ export const getPassById = query({
     return await ctx.db.get(passId);
   },
 });
+
+export const resetPassSoldQuantity = mutation({
+  args: { passId: v.id("passes") },
+  handler: async (ctx, { passId }) => {
+    await ctx.db.patch(passId, {
+      soldQuantity: 0,
+    });
+    return { success: true };
+  },
+});
+
+export const updatePassSoldQuantity = mutation({
+  args: { 
+    passId: v.id("passes"),
+    soldQuantity: v.number()
+  },
+  handler: async (ctx, { passId, soldQuantity }) => {
+    await ctx.db.patch(passId, {
+      soldQuantity,
+    });
+    return { success: true };
+  },
+});

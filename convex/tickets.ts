@@ -258,10 +258,17 @@ export const issueAfterPayment = mutation({
     if (passId) {
       const pass = await ctx.db.get(passId);
       if (pass) {
+        const newSoldQuantity = pass.soldQuantity + ticketQuantity;
+        console.log(`Updating pass ${passId}: ${pass.soldQuantity} + ${ticketQuantity} = ${newSoldQuantity}`);
         await ctx.db.patch(passId, {
-          soldQuantity: pass.soldQuantity + ticketQuantity,
+          soldQuantity: newSoldQuantity,
         });
+        console.log(`Pass ${passId} updated successfully`);
+      } else {
+        console.log(`Pass ${passId} not found`);
       }
+    } else {
+      console.log('No passId provided, skipping pass update');
     }
 
     return ticketIds;
