@@ -228,6 +228,23 @@ export const createEvent = mutation({
     userId: v.string(),
   },
   handler: async (ctx, args) => {
+    // Get the authenticated user
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new ConvexError("You must be logged in to create an event");
+    }
+
+    // Verify the authenticated user matches the provided userId
+    if (identity.subject !== args.userId) {
+      throw new ConvexError("User ID mismatch");
+    }
+
+    // Check if user is in AUTHORIZED_CREATORS list
+    const AUTHORIZED_CREATORS = ["user_30vHGOIpgMB2gXYCo6fEAxQzA0W"];
+    if (!AUTHORIZED_CREATORS.includes(args.userId)) {
+      throw new ConvexError("You are not authorized to create events");
+    }
+
     const eventId = await ctx.db.insert("events", {
       name: args.name,
       description: args.description,
@@ -255,6 +272,25 @@ export const updateEvent = mutation({
   },
   handler: async (ctx, args) => {
     const { eventId, ...updateData } = args;
+    
+    // Get the event to check ownership
+    const event = await ctx.db.get(eventId);
+    if (!event) {
+      throw new ConvexError("Event not found");
+    }
+
+    // Get the authenticated user
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new ConvexError("You must be logged in to update an event");
+    }
+
+    // Check if the user is the event creator
+    if (event.userId !== identity.subject) {
+      throw new ConvexError("You are not authorized to update this event");
+    }
+
+    // Proceed with update if authorized
     await ctx.db.patch(eventId, updateData);
   },
 });
@@ -265,6 +301,24 @@ export const cancelEvent = mutation({
     eventId: v.id("events"),
   },
   handler: async (ctx, { eventId }) => {
+    // Get the event to check ownership
+    const event = await ctx.db.get(eventId);
+    if (!event) {
+      throw new ConvexError("Event not found");
+    }
+
+    // Get the authenticated user
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new ConvexError("You must be logged in to cancel an event");
+    }
+
+    // Check if the user is the event creator
+    if (event.userId !== identity.subject) {
+      throw new ConvexError("You are not authorized to cancel this event");
+    }
+
+    // Proceed with cancellation if authorized
     await ctx.db.patch(eventId, {
       is_cancelled: true,
     });

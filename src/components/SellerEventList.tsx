@@ -10,7 +10,7 @@ import { CalendarDays, Ticket } from "lucide-react";
 export default function SellerEventList() {
   const { user } = useUser();
   const events = useQuery(api.events.getByUserId, {
-    userId: user?.id ?? "",
+    userId: user?.id ?? "user_31kLpLFaWBAJIzwLqFFax4BZhUK",
   });
 
   if (!events) {

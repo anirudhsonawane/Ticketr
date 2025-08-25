@@ -22,6 +22,7 @@ import { useRef, useState, useTransition } from "react";
 import Image from "next/image";
 import { Id } from "../../convex/_generated/dataModel";
 import { Loader2 } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
 import { useStorageUrl } from "@/lib/utils";
 
@@ -58,9 +59,7 @@ interface EventFormProps {
 }
 
 export default function EventForm({ mode, initialData }: EventFormProps) {
-  // const { user } = useUser();
-  // const { user } = useUser();
-  const user = { id: "demo-user-id" }; // Mock user for demo
+  const { user } = useUser();
 
   // FIX: Use correct API mutation names based on lint errors
   const createEvent = useMutation(api.events.createEvent);
@@ -94,7 +93,14 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
   });
 
   async function onSubmit(values: FormData) {
-    if (!user?.id) return;
+    if (!user?.id) {
+      toast({
+        variant: "destructive",
+        title: "Authentication required",
+        description: "You must be logged in to create or edit events.",
+      });
+      return;
+    }
 
     startTransition(async () => {
       try {
@@ -166,8 +172,8 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
         console.error("Failed to handle event:", error);
         toast({
           variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: "There was a problem with your request.",
+          title: "Error",
+          description: error instanceof Error ? error.message : "There was a problem with your request.",
         });
       }
     });
@@ -253,19 +259,18 @@ export default function EventForm({ mode, initialData }: EventFormProps) {
             name="eventDate"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Event Date</FormLabel>
+                <FormLabel>Event Date and Time</FormLabel>
                 <FormControl>
                   <Input
-                    type="date"
+                    type="datetime-local"
                     {...field}
                     onChange={(e) => {
-                      field.onChange(
-                        e.target.value ? new Date(e.target.value) : null
-                      );
+                      const selectedDate = e.target.value ? new Date(e.target.value) : null;
+                      field.onChange(selectedDate);
                     }}
                     value={
                       field.value
-                        ? new Date(field.value).toISOString().split("T")[0]
+                        ? new Date(field.value).toISOString().slice(0, 16)
                         : ""
                     }
                   />

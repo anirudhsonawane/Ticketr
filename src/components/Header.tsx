@@ -1,12 +1,14 @@
+"use client";
+
 import Image from "next/image";
 import Link  from "next/link";
 import logo from "@/app/logo.png";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import SearchBar from "./SearchBar";
 
-
-
 function Header() {
+  const { isLoaded } = useUser();
+
   return (
     <div className="border-b relative z-40">
       <div className="flex flex-col lg:flex-row items-center gap-4 p-4">
@@ -21,19 +23,18 @@ function Header() {
             />
           </Link>
 
+          {isLoaded && (
           <div className="lg:hidden flex items-center relative z-50">
             <SignedIn>
               <UserButton 
                 appearance={{
                   elements: {
                     avatarBox: "w-10 h-10 border-2 border-gray-200 shadow-sm",
-                    userButtonPopoverCard: "right-0 z-50",
                     userButtonPopoverRootBox: "z-50"
                   }
                 }}
               />
             </SignedIn>
-
             <SignedOut>
               <SignInButton mode="modal">
                 <button className="bg-gray-100 text-gray-800 px-3 py-1.5 text-sm rounded-lg hover:bg-gray-200 transition border border-gray-300">
@@ -42,6 +43,7 @@ function Header() {
               </SignInButton>
             </SignedOut>
           </div>
+        )}
         </div>
 
         {/* Search Bar - full width on mobile*/}

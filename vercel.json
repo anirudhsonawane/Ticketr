@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "buildCommand": "next build",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "regions": ["bom1"],
+  "github": {
+    "silent": true
+  }
+}
