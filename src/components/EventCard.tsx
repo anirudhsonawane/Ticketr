@@ -260,9 +260,9 @@ export default function EventCard({ eventId, hideBuyButton = false }: { eventId:
           </div>
 
           {/* Price Tag */}
-          <div className="flex flex-col items-end gap-2 ml-4">
+          <div className="flex flex-col items-end gap-2 ml-10">
             <span
-              className={`px-2 sm:px-4 py-1 sm:py-1.5 text-sm sm:text-base font-semibold rounded-full ${
+              className={`px-2 sm:px-9 py-1 sm:py-1.5 text-sm sm:text-base font-semibold rounded-full ${
                 availability.remainingTickets > 0
                   ? "bg-green-50 text-green-700"
                   : "bg-red-50 text-red-700"
